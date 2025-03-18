@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Colors
-  static const Color primaryColor = Color(0xFF4CAF50);
-  static const Color secondaryColor = Color(0xFF8BC34A);
+  // Colors - Using a consistent green (Tailwind green-600)
+  static const Color primaryColor = Color(0xFF19BB76); // Green 600
+  static const Color secondaryColor = Color(0xFF10B981); // Green 500
   static const Color accentColor = Color(0xFFFFEB3B);
-  static const Color darkGreen = Color(0xFF2E7D32);
-  static const Color lightGreen = Color(0xFFAED581);
-  static const Color backgroundColor = Color(0xFFF5F5F5);
+  static const Color darkGreen = Color(0xFF047857); // Green 700
+  static const Color lightGreen = Color(0xFF34D399); // Green 400
+  static const Color backgroundColor = Colors.white;
   static const Color darkBackgroundColor = Color(0xFF121212);
   static const Color errorColor = Color(0xFFE53935);
 
@@ -25,13 +25,13 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: backgroundColor,
     appBarTheme: AppBarTheme(
-      backgroundColor: primaryColor,
-      foregroundColor: Colors.white,
+      backgroundColor: Colors.white,
+      foregroundColor: primaryColor,
       elevation: 0,
       titleTextStyle: GoogleFonts.poppins(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: primaryColor,
       ),
     ),
     textTheme: TextTheme(
@@ -122,13 +122,13 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: darkBackgroundColor,
     appBarTheme: AppBarTheme(
-      backgroundColor: darkGreen,
-      foregroundColor: Colors.white,
+      backgroundColor: darkBackgroundColor,
+      foregroundColor: primaryColor,
       elevation: 0,
       titleTextStyle: GoogleFonts.poppins(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: primaryColor,
       ),
     ),
     textTheme: TextTheme(
