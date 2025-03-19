@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../screens/dashboard/market_tab.dart';
+import '../screens/orders/orders_screen.dart';
+import '../screens/tasks/tasks_screen.dart';
 import '../theme/app_theme.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/dashboard/disease_detection_tab.dart';
@@ -76,7 +79,7 @@ class AppDrawer extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(
-                          Icons.emoji_events_outlined, // Flutter icon replacement
+                          Icons.emoji_events_outlined,
                           size: 16,
                           color: Colors.white,
                         ),
@@ -102,7 +105,7 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   _buildDrawerItem(
                     context,
-                    icon: Icons.dashboard_outlined, // Flutter icon replacement
+                    icon: Icons.dashboard_outlined,
                     title: 'Dashboard',
                     onTap: () {
                       Navigator.pushReplacement(
@@ -115,7 +118,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.qr_code_scanner, // Flutter icon replacement
+                    icon: Icons.qr_code_scanner,
                     title: 'Disease Detection',
                     onTap: () {
                       Navigator.pop(context);
@@ -129,7 +132,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.shopping_bag_outlined, // Flutter icon replacement
+                    icon: Icons.shopping_bag_outlined,
                     title: 'Shop Treatments',
                     onTap: () {
                       Navigator.pop(context);
@@ -143,7 +146,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.notifications_outlined, // Flutter icon replacement
+                    icon: Icons.notifications_outlined,
                     title: 'Notifications',
                     onTap: () {
                       Navigator.pop(context);
@@ -157,34 +160,49 @@ class AppDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.task_outlined, // Flutter icon replacement
+                    icon: Icons.task_outlined,
                     title: 'My Tasks',
                     onTap: () {
                       Navigator.pop(context);
-                      // Navigate to tasks screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TasksScreen(),
+                        ),
+                      );
                     },
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.bar_chart_outlined, // Flutter icon replacement
+                    icon: Icons.bar_chart_outlined,
                     title: 'Analytics',
                     onTap: () {
                       Navigator.pop(context);
-                      // Navigate to analytics screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MarketTab(),
+                        ),
+                      );
                     },
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.shopping_cart_outlined, // Flutter icon replacement
+                    icon: Icons.shopping_cart_outlined,
                     title: 'My Orders',
                     onTap: () {
                       Navigator.pop(context);
-                      // Navigate to orders screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OrdersScreen(),
+                        ),
+                      );
                     },
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.settings_outlined, // Flutter icon replacement
+                    icon: Icons.settings_outlined,
                     title: 'Settings',
                     onTap: () {
                       Navigator.pop(context);
@@ -194,7 +212,7 @@ class AppDrawer extends StatelessWidget {
                   const Divider(),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.help_outline, // Flutter icon replacement
+                    icon: Icons.help_outline,
                     title: 'Help & Support',
                     onTap: () {
                       Navigator.pop(context);
@@ -203,7 +221,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     context,
-                    icon: Icons.logout, // Flutter icon replacement
+                    icon: Icons.logout,
                     title: 'Logout',
                     textColor: Colors.red,
                     iconColor: Colors.red,
@@ -240,7 +258,7 @@ class AppDrawer extends StatelessWidget {
 
   Widget _buildDrawerItem(
       BuildContext context, {
-        required IconData icon, // Flutter icon replacement
+        required IconData icon,
         required String title,
         required VoidCallback onTap,
         Color? textColor,

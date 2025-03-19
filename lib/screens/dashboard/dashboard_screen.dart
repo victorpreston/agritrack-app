@@ -1,9 +1,10 @@
+import '../tasks/add_task_screen.dart';
 import 'package:flutter/material.dart';
+import '../treatments/treatment_shop_screen.dart';
 import 'home_tab.dart';
 import 'disease_detection_tab.dart';
 import 'market_tab.dart';
 import 'profile_tab.dart';
-import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -106,7 +107,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _showQuickActionsMenu();
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(
+        child: const Icon(
           Icons.add,
           size: 24,
           color: Colors.white,
@@ -166,7 +167,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 subtitle: const Text('Browse agricultural products'),
                 onTap: () {
                   Navigator.pop(context);
-                  // Navigate to shop screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TreatmentShopScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -182,7 +188,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 subtitle: const Text('Create a new farming task'),
                 onTap: () {
                   Navigator.pop(context);
-                  // Navigate to add task screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddTaskScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -195,10 +206,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 title: const Text('View Analytics'),
-                subtitle: const Text('Check your farm performance'),
+                subtitle: const Text('Check Market Analytics'),
                 onTap: () {
                   Navigator.pop(context);
-                  // Navigate to analytics screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MarketTab(),
+                    ),
+                  );
                 },
               ),
             ],

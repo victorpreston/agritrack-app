@@ -3,7 +3,6 @@ import '../../theme/app_theme.dart';
 import 'treatment_detail_screen.dart';
 import '../../models/treatment.dart';
 
-
 class TreatmentShopScreen extends StatefulWidget {
   const TreatmentShopScreen({super.key});
 
@@ -27,7 +26,7 @@ class _TreatmentShopScreenState extends State<TreatmentShopScreen> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.shopping_cart_outlined, // Flutter icon replacement
+              Icons.shopping_cart_outlined,
               size: 24,
               color: AppTheme.primaryColor,
             ),
@@ -39,14 +38,13 @@ class _TreatmentShopScreenState extends State<TreatmentShopScreen> {
       ),
       body: Column(
         children: [
-          // Search bar
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search treatments...',
                 prefixIcon: const Icon(
-                  Icons.search, // Flutter icon replacement
+                  Icons.search,
                   size: 24,
                   color: Colors.grey,
                 ),
@@ -60,8 +58,6 @@ class _TreatmentShopScreenState extends State<TreatmentShopScreen> {
               ),
             ),
           ),
-
-          // Categories
           SizedBox(
             height: 50,
             child: ListView.builder(
@@ -95,8 +91,6 @@ class _TreatmentShopScreenState extends State<TreatmentShopScreen> {
               },
             ),
           ),
-
-          // All treatments
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -168,13 +162,12 @@ class _TreatmentShopScreenState extends State<TreatmentShopScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Product image
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
-              child: Image.network(
+              child: Image.asset(
                 treatment.imageUrl,
                 height: 120,
                 width: double.infinity,
@@ -221,7 +214,7 @@ class _TreatmentShopScreenState extends State<TreatmentShopScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.add, // Flutter icon replacement
+                          Icons.add,
                           size: 16,
                           color: Colors.white,
                         ),
@@ -238,8 +231,6 @@ class _TreatmentShopScreenState extends State<TreatmentShopScreen> {
   }
 }
 
-
-// Sample treatments data
 final List<Treatment> allTreatments = [
   Treatment(
     id: 1,
@@ -247,7 +238,7 @@ final List<Treatment> allTreatments = [
     description: 'An organic fungicide effective against a wide range of fungal diseases in crops.',
     price: 29.99,
     category: 'Fungicides',
-    imageUrl: '/placeholder.svg?height=120&width=160',
+    imageUrl: 'assets/detection/antifungal.png',
     targetDiseases: ['Northern Leaf Blight', 'Gray Leaf Spot'],
     usage: 'Mix 10ml per gallon of water and spray every 7-10 days.',
   ),
@@ -257,7 +248,7 @@ final List<Treatment> allTreatments = [
     description: 'A broad-spectrum insecticide that controls a variety of crop-damaging insects.',
     price: 34.99,
     category: 'Insecticides',
-    imageUrl: '/placeholder.svg?height=120&width=160',
+    imageUrl: 'assets/detection/antifungal.png',
     targetDiseases: ['Corn Earworm', 'Aphids'],
     usage: 'Apply 5ml per gallon of water.',
   ),

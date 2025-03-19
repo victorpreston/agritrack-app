@@ -117,7 +117,7 @@ class _MarketTabState extends State<MarketTab> with SingleTickerProviderStateMix
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Row(
+                  const Row(
                     children: [
                       Icon(
                         Icons.arrow_upward,

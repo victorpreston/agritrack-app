@@ -149,7 +149,7 @@ class _DiseaseDetectionTabState extends State<DiseaseDetectionTab> {
                 diseaseName: 'Early Blight',
                 date: '2 days ago',
                 severity: 'Moderate',
-                imagePath: '/placeholder.svg?height=60&width=60',
+                imagePath: 'assets/detection/leaf.png',
               ),
               const SizedBox(height: 12),
               const DiseaseHistoryCard(
@@ -157,7 +157,7 @@ class _DiseaseDetectionTabState extends State<DiseaseDetectionTab> {
                 diseaseName: 'Late Blight',
                 date: '1 week ago',
                 severity: 'Severe',
-                imagePath: '/placeholder.svg?height=60&width=60',
+                imagePath: 'assets/detection/leaf.png',
               ),
               const SizedBox(height: 12),
               const DiseaseHistoryCard(
@@ -165,7 +165,7 @@ class _DiseaseDetectionTabState extends State<DiseaseDetectionTab> {
                 diseaseName: 'Northern Leaf Blight',
                 date: '2 weeks ago',
                 severity: 'Mild',
-                imagePath: '/placeholder.svg?height=60&width=60',
+                imagePath: 'assets/detection/leaf.png',
               ),
             ],
           ),

@@ -35,12 +35,7 @@ class DiseaseHistoryCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              imagePath,
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
-            ),
+            child: _buildImage(imagePath),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -53,6 +48,8 @@ class DiseaseHistoryCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -60,16 +57,20 @@ class DiseaseHistoryCard extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.grey.shade600,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
                 const SizedBox(height: 4),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      date,
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
+                    Expanded(
+                      child: Text(
+                        date,
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Container(
@@ -85,6 +86,7 @@ class DiseaseHistoryCard extends StatelessWidget {
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -97,10 +99,31 @@ class DiseaseHistoryCard extends StatelessWidget {
             onPressed: () {
               // Navigate to detail page
             },
+            constraints: const BoxConstraints(minWidth: 24),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildImage(String path) {
+    if (path.startsWith('http')) {
+      return Image.network(
+        path,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/detection/leaf.png', width: 60, height: 60);
+        },
+      );
+    } else {
+      return Image.asset(
+        'assets/detection/leaf.png',
+        width: 60,
+        height: 60,
+      );
+    }
   }
 
   Color _getSeverityColor(String severity) {

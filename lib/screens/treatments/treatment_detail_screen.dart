@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../models/treatment.dart';
 
-
 class TreatmentDetailScreen extends StatefulWidget {
   final Treatment treatment;
 
@@ -30,7 +29,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.favorite_border, // Flutter icon replacement
+              Icons.favorite_border,
               size: 24,
               color: AppTheme.primaryColor,
             ),
@@ -50,8 +49,8 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
               height: 250,
               child: Stack(
                 children: [
-                  Image.network(
-                    widget.treatment.imageUrl,
+                  Image.asset(
+                    'assets/detection/antifungal.png', // Using local asset
                     width: double.infinity,
                     height: 250,
                     fit: BoxFit.cover,
@@ -200,7 +199,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(
-                          Icons.info_outline, // Flutter icon replacement
+                          Icons.info_outline,
                           size: 24,
                           color: AppTheme.primaryColor,
                         ),
@@ -240,7 +239,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                Icons.remove, // Flutter icon replacement
+                                Icons.remove,
                                 size: 20,
                                 color: _quantity > 1 ? AppTheme.primaryColor : Colors.grey,
                               ),
@@ -261,7 +260,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
                             ),
                             IconButton(
                               icon: const Icon(
-                                Icons.add, // Flutter icon replacement
+                                Icons.add,
                                 size: 20,
                                 color: AppTheme.primaryColor,
                               ),

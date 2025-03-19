@@ -29,18 +29,12 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
 
   List<Order> _getFilteredOrders() {
     switch (_tabController.index) {
-      case 0: // All
-        return orders;
-      case 1: // Pending
-        return orders.where((order) => order.status == OrderStatus.pending).toList();
-      case 2: // Processing
-        return orders.where((order) => order.status == OrderStatus.processing).toList();
-      case 3: // Shipped
-        return orders.where((order) => order.status == OrderStatus.shipped).toList();
-      case 4: // Delivered
-        return orders.where((order) => order.status == OrderStatus.delivered).toList();
-      default:
-        return orders;
+      case 0: return orders;
+      case 1: return orders.where((order) => order.status == OrderStatus.pending).toList();
+      case 2: return orders.where((order) => order.status == OrderStatus.processing).toList();
+      case 3: return orders.where((order) => order.status == OrderStatus.shipped).toList();
+      case 4: return orders.where((order) => order.status == OrderStatus.delivered).toList();
+      default: return orders;
     }
   }
 
@@ -59,9 +53,7 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
           unselectedLabelColor: Colors.grey,
           indicatorColor: AppTheme.primaryColor,
           isScrollable: true,
-          onTap: (index) {
-            setState(() {});
-          },
+          onTap: (index) => setState(() {}),
           tabs: const [
             Tab(text: 'All Orders'),
             Tab(text: 'Pending'),
@@ -132,15 +124,15 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
               // Order items preview
               Row(
                 children: [
-                  // Show up to 3 product images
+                  // Show up to 3 product images or antifungal image
                   ...List.generate(
                     order.items.length > 3 ? 3 : order.items.length,
                         (index) => Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          order.items[index].imageUrl,
+                        child: Image.asset(
+                          'assets/detection/antifungal.png', // Antifungal image
                           width: 60,
                           height: 60,
                           fit: BoxFit.cover,
@@ -241,10 +233,7 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
                         ),
                       );
                     },
-                    icon: const Icon(
-                      Icons.visibility,
-                      size: 16,
-                    ),
+                    icon: const Icon(Icons.visibility, size: 16),
                     label: const Text('View Details'),
                     style: TextButton.styleFrom(
                       foregroundColor: AppTheme.primaryColor,
@@ -289,18 +278,11 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 80,
-            color: Colors.grey.shade300,
-          ),
+          Icon(icon, size: 80, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
             message,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
           ),
           const SizedBox(height: 8),
           ElevatedButton.icon(
