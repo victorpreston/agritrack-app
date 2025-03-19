@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             color: Colors.white,
             child: Stack(
               children: [
-                // Soil Section (formerly Green Section)
+
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ),
                 ),
 
-                // Cloud icons (Appear instantly)
+
                 _buildClouds(),
 
                 // Main content
@@ -90,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Just the leaf logo without cards or rotation animation
+
                       FadeTransition(
                         opacity: _animation,
                         child: ScaleTransition(
@@ -199,7 +199,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
   }
 
-  // Cloud icons now appear instantly (no delay)
+
   Widget _buildClouds() {
     return Stack(
       children: [
@@ -235,15 +235,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 }
 
-// Soil painter (replacing the green section)
+// Soil painter
 class SoilPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..shader = LinearGradient(
         colors: [
-          const Color(0xFF8B4513).withOpacity(0.8), // SaddleBrown
-          const Color(0xFF654321), // Dark brown
+          const Color(0xFF8B4513).withOpacity(0.8),
+          const Color(0xFF654321),
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -262,10 +262,9 @@ class SoilPainter extends CustomPainter {
 
     canvas.drawPath(path, paint);
 
-    // Add soil texture with small darker spots
-    final Random random = Random(42); // Fixed seed for consistent pattern
+    final Random random = Random(42);
     final spotPaint = Paint()
-      ..color = const Color(0xFF3D2314).withOpacity(0.3) // Darker brown
+      ..color = const Color(0xFF3D2314).withOpacity(0.3)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 100; i++) {

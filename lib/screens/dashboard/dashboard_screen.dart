@@ -3,6 +3,7 @@ import 'home_tab.dart';
 import 'disease_detection_tab.dart';
 import 'market_tab.dart';
 import 'profile_tab.dart';
+import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -49,23 +50,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
+              icon: Icon(
+                Icons.home_outlined,
+                size: 24,
+              ),
+              activeIcon: Icon(
+                Icons.home,
+                size: 24,
+                color: Colors.white,
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt_outlined),
-              activeIcon: Icon(Icons.camera_alt),
+              icon: Icon(
+                Icons.document_scanner_outlined,
+                size: 24,
+              ),
+              activeIcon: Icon(
+                Icons.document_scanner,
+                size: 24,
+                color: Colors.white,
+              ),
               label: 'Detect',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.trending_up_outlined),
-              activeIcon: Icon(Icons.trending_up),
+              icon: Icon(
+                Icons.trending_up_outlined,
+                size: 24,
+              ),
+              activeIcon: Icon(
+                Icons.trending_up,
+                size: 24,
+                color: Colors.white,
+              ),
               label: 'Market',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
+              icon: Icon(
+                Icons.person_outline,
+                size: 24,
+              ),
+              activeIcon: Icon(
+                Icons.person,
+                size: 24,
+                color: Colors.white,
+              ),
               label: 'Profile',
             ),
           ],
@@ -77,7 +106,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _showQuickActionsMenu();
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          size: 24,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -106,7 +139,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: Icon(
-                    Icons.camera_alt,
+                    Icons.document_scanner_outlined,
+                    size: 24,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
@@ -123,7 +157,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: Icon(
-                    Icons.shopping_cart,
+                    Icons.shopping_bag_outlined,
+                    size: 24,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
@@ -138,7 +173,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: Icon(
-                    Icons.add_task,
+                    Icons.task_outlined,
+                    size: 24,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
@@ -153,7 +189,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: Icon(
-                    Icons.analytics,
+                    Icons.analytics_outlined,
+                    size: 24,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
