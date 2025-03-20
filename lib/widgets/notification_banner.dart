@@ -13,8 +13,8 @@ class NotificationBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color textColor = isSuccess ? AppTheme.darkGreen : AppTheme.errorColor;
-    final Color borderColor = isSuccess ? AppTheme.darkGreen : AppTheme.errorColor;
+    final Color textColor = isSuccess ? AppTheme.primaryColor : AppTheme.errorColor;
+    final Color borderColor = isSuccess ? AppTheme.primaryColor : AppTheme.errorColor;
     final Color backgroundColor = Theme.of(context).brightness == Brightness.dark
         ? const Color(0xFF2A2A2A)
         : Colors.white;
@@ -28,6 +28,7 @@ class NotificationBanner extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: backgroundColor,
           child: Container(
+            width: MediaQuery.of(context).size.width * 0.85,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: backgroundColor,
@@ -49,6 +50,8 @@ class NotificationBanner extends StatelessWidget {
                       color: textColor,
                       fontWeight: FontWeight.bold,
                     ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
                 ),
               ],

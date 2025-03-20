@@ -24,7 +24,7 @@ class AppDrawer extends StatelessWidget {
           children: [
             // Drawer Header with user info
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
               ),
