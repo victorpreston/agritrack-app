@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
 import '../screens/dashboard/market_tab.dart';
 import '../screens/orders/orders_screen.dart';
 import '../screens/tasks/tasks_screen.dart';
@@ -14,16 +15,18 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Drawer(
       child: Container(
-        color: Colors.white,
+        color: theme.colorScheme.background,
         child: Column(
           children: [
             // Drawer Header with user info
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
-              decoration: const BoxDecoration(
-                color: AppTheme.primaryColor,
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +45,7 @@ class AppDrawer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +58,7 @@ class AppDrawer extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
                               'Corn & Wheat Farmer',
                               style: TextStyle(
@@ -68,9 +71,9 @@ class AppDrawer extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
@@ -78,13 +81,13 @@ class AppDrawer extends StatelessWidget {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.emoji_events_outlined,
                           size: 16,
                           color: Colors.white,
                         ),
-                        const SizedBox(width: 4),
-                        const Text(
+                        SizedBox(width: 4),
+                        Text(
                           'Premium Member',
                           style: TextStyle(
                             color: Colors.white,
@@ -200,15 +203,6 @@ class AppDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.settings_outlined,
-                    title: 'Settings',
-                    onTap: () {
-                      Navigator.pop(context);
-                      // Navigate to settings screen
-                    },
-                  ),
                   const Divider(),
                   _buildDrawerItem(
                     context,
@@ -225,7 +219,8 @@ class AppDrawer extends StatelessWidget {
                     title: 'Logout',
                     textColor: Colors.red,
                     iconColor: Colors.red,
-                    onTap: () {
+                    onTap: () async {
+                      await AuthService().signOut(context);
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -241,11 +236,11 @@ class AppDrawer extends StatelessWidget {
 
             // App version at bottom
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(12.0),
               child: Text(
                 'Version 1.0.0',
                 style: TextStyle(
-                  color: Colors.grey.shade600,
+                  color: theme.textTheme.bodyMedium!.color,
                   fontSize: 12,
                 ),
               ),
@@ -264,16 +259,17 @@ class AppDrawer extends StatelessWidget {
         Color? textColor,
         Color? iconColor,
       }) {
+    final theme = Theme.of(context);
     return ListTile(
       leading: Icon(
         icon,
         size: 24,
-        color: iconColor ?? AppTheme.primaryColor,
+        color: iconColor ?? theme.colorScheme.primary,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: textColor ?? Colors.black87,
+          color: textColor ?? theme.textTheme.bodyLarge!.color,
           fontWeight: FontWeight.w500,
         ),
       ),

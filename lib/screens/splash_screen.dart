@@ -1,10 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dashboard/dashboard_screen.dart';
 import 'onboarding_screen.dart';
 import '../theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
+import '../services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,12 +33,24 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
     _animationController.forward();
 
-    // Navigate to next screen
-    Timer(const Duration(seconds: 6), () {
+    // Check session and navigate accordingly
+    _checkUserSession();
+  }
+
+  // Check if user session exists and navigate accordingly
+  Future<void> _checkUserSession() async {
+    bool isLoggedIn = await AuthService().restoreSession();
+
+    // Delay to ensure splash screen animations play
+    await Future.delayed(const Duration(seconds: 6));
+
+    if (mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        MaterialPageRoute(
+          builder: (_) => isLoggedIn ? const DashboardScreen() : const OnboardingScreen(),
+        ),
       );
-    });
+    }
   }
 
   @override
@@ -77,7 +90,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     opacity: const AlwaysStoppedAnimation(0.9),
                   ),
                 ),
-
 
                 _buildClouds(),
 
@@ -198,7 +210,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       ),
     );
   }
-
 
   Widget _buildClouds() {
     return Stack(
