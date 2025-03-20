@@ -1,0 +1,1 @@
+ALTER TABLE user_profiles ADD COLUMN farm_id UUID REFERENCES farms(id) ON DELETE SET NULL;

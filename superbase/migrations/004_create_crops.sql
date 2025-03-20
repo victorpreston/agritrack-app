@@ -1,0 +1,8 @@
+CREATE TABLE crops (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    farm_id UUID REFERENCES farms(id) ON DELETE CASCADE,
+    type TEXT NOT NULL
+);
+
+ALTER TABLE crops ENABLE ROW LEVEL SECURITY;
