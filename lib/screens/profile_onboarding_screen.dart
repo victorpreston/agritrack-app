@@ -25,8 +25,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final TextEditingController _phoneController = TextEditingController();
   String _profilePicture = '';
   File? _selectedImage;
-  String _selectedCountryCode = '+1'; // Default to USA
-  String _selectedFlag = '🇺🇸'; // Default USA flag
+  String _selectedCountryCode = '+1';
+  String _selectedFlag = '🇺🇸';
 
   // User details from Auth
   String _userEmail = '';
