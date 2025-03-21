@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/notification_banner.dart';
+import '../models/user_profile.dart';
+import '../screens/profile_onboarding_screen.dart';
+import '../screens/dashboard/dashboard_screen.dart';
 
 class AuthService {
   final SupabaseClient _supabase = Supabase.instance.client;
@@ -60,7 +63,22 @@ class AuthService {
       }
 
       showNotificationBanner(context, 'Login successful!', isSuccess: true);
-      return response;
+
+      // Check if user profile exists
+      final hasProfile = await _checkUserProfile(response.user!.id);
+      if (hasProfile) {
+        // Navigate to Dashboard
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const DashboardScreen()),
+        );
+      } else {
+        // Navigate to Profile Onboarding
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        );
+      }
+
+      return response; // Return response so it can be used in `login_screen.dart`
     } on AuthException catch (e) {
       _handleAuthError(context, e);
       return null;
@@ -68,6 +86,17 @@ class AuthService {
       showNotificationBanner(context, 'An unexpected error occurred. Try again.');
       return null;
     }
+  }
+
+  // Check if user has a profile
+  Future<bool> _checkUserProfile(String userId) async {
+    final response = await _supabase
+        .from('user_profiles')
+        .select()
+        .eq('id', userId)
+        .maybeSingle();
+
+    return response != null;
   }
 
   // Sign out
@@ -90,15 +119,4 @@ class AuthService {
 
     showNotificationBanner(context, message);
   }
-}
-
-// Helper function to show notification banner
-void showNotificationBanner(BuildContext context, String message, {bool isSuccess = false}) {
-  final overlay = Overlay.of(context);
-  final overlayEntry = OverlayEntry(
-    builder: (context) => NotificationBanner(message: message, isSuccess: isSuccess),
-  );
-
-  overlay.insert(overlayEntry);
-  Future.delayed(const Duration(seconds: 3), overlayEntry.remove);
 }

@@ -5,27 +5,37 @@ class Crop {
   final String type;
 
   Crop({
-    required this.id,
+    this.id = '',
     required this.name,
     required this.farmId,
     required this.type,
   });
 
-  factory Crop.fromJson(Map<String, dynamic> json) {
-    return Crop(
-      id: json['id'],
-      name: json['name'],
-      farmId: json['farm_id'],
-      type: json['type'],
-    );
-  }
-
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
+    final json = {
       'name': name,
-      'farm_id': farmId,
       'type': type,
     };
+
+    // Only include ID if it's not empty
+    if (id.isNotEmpty) {
+      json['id'] = id;
+    }
+
+    // Only include farmId if it's not empty
+    if (farmId.isNotEmpty) {
+      json['farm_id'] = farmId;
+    }
+
+    return json;
+  }
+
+  factory Crop.fromJson(Map<String, dynamic> json) {
+    return Crop(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      farmId: json['farm_id'] ?? '',
+      type: json['type'] ?? '',
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
+import '../../widgets/notification_banner.dart';
 import 'register_screen.dart';
 import '../dashboard/dashboard_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -42,17 +43,13 @@ class _LoginScreenState extends State<LoginScreen> {
           context: context, // Pass context for error handling
         );
 
-        if (response?.user != null) {
-          // Show success banner
-          showNotificationBanner(context, 'Login successful!', isSuccess: true);
-
-          // Navigate to dashboard
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const DashboardScreen()),
-          );
+        if (response == null || response.user == null) {
+          showNotificationBanner(context, 'Login failed. Please try again.');
+          return;
         }
+
+        // No need to handle navigation here since it's already done in `signIn`
       } catch (e) {
-        // Show error banner
         showNotificationBanner(context, 'Login failed: ${e.toString()}');
       }
     }

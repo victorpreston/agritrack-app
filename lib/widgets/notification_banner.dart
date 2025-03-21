@@ -62,3 +62,14 @@ class NotificationBanner extends StatelessWidget {
     );
   }
 }
+
+// Helper function to show notification banner
+void showNotificationBanner(BuildContext context, String message, {bool isSuccess = false}) {
+  final overlay = Overlay.of(context);
+  final overlayEntry = OverlayEntry(
+    builder: (context) => NotificationBanner(message: message, isSuccess: isSuccess),
+  );
+
+  overlay.insert(overlayEntry);
+  Future.delayed(const Duration(seconds: 3), overlayEntry.remove);
+}

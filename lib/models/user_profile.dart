@@ -6,7 +6,7 @@ class UserProfile {
   final String profilePicture;
   final String memberSince;
   final String subscription;
-  final String farmId; // Links to Farm
+  final String farmId;
 
   UserProfile({
     required this.id,
@@ -22,9 +22,9 @@ class UserProfile {
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       id: json['id'],
-      fullName: json['full_name'],
-      email: json['email'],
-      phone: json['phone'],
+      fullName: json['full_name'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
       profilePicture: json['profile_picture'] ?? '',
       memberSince: json['member_since'],
       subscription: json['subscription'] ?? 'Free',
