@@ -6,7 +6,7 @@
 ![diagram-export-3-20-2025-5_55_38-PM](https://github.com/user-attachments/assets/a40c0b97-0ce3-4577-b509-435f52c04d65)
 
 
-AgriTrack is an innovative Flutter-based mobile application designed to revolutionize farming through AI-powered solutions. The app helps farmers optimize crop production, detect diseases early, make data-driven decisions, and maximize profits through smart technology.
+AgriTrack is a Flutter-based mobile application designed to revolutionize farming through AI-powered solutions. The app helps farmers optimize crop production, detect diseases early, make data-driven decisions, and maximize profits through smart technology.
 
 ## Key Features
 
@@ -30,7 +30,7 @@ AgriTrack is an innovative Flutter-based mobile application designed to revoluti
 - Trend analysis and future price predictions
 - Optimal harvest timing recommendations
 
-### 📱 Farmer Dashboard
+### Farmer Dashboard
 - Comprehensive overview of farm performance
 - Task management system
 - Resource usage analytics
@@ -93,7 +93,7 @@ agritrack/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-organization/agritrack.git
+   git clone https://github.com/victorpreston/agritrack-app.git
    cd agritrack
    ```
 
