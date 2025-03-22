@@ -1,3 +1,5 @@
+import 'package:hugeicons/hugeicons.dart';
+
 import '../tasks/add_task_screen.dart';
 import 'package:flutter/material.dart';
 import '../treatments/treatment_shop_screen.dart';
@@ -108,7 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(
-          Icons.add,
+          HugeIcons.strokeRoundedMore,
           size: 24,
           color: Colors.white,
         ),
@@ -140,7 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: Icon(
-                    Icons.document_scanner_outlined,
+                    HugeIcons.strokeRoundedSearchFocus,
                     size: 24,
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -158,7 +160,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: Icon(
-                    Icons.shopping_bag_outlined,
+                    HugeIcons.strokeRoundedShoppingBagAdd,
                     size: 24,
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -179,7 +181,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: Icon(
-                    Icons.task_outlined,
+                    HugeIcons.strokeRoundedNoteAdd,
                     size: 24,
                     color: Theme.of(context).colorScheme.primary,
                   ),

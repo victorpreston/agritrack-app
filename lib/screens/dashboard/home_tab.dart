@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../widgets/app_drawer.dart';
 import '../../widgets/weather_card.dart';
-import '../../widgets/task_card.dart';
-// Remove the conflicting import
-// import '../../widgets/market_price_card.dart';
 import '../notifications/notifications_screen.dart';
+import 'market_tab.dart';
 import 'dart:async';
-
-// Import the CommoditiesService
 import '../../services/commodities_service.dart';
 import 'home/price_card.dart';
+import 'home/upcoming_tasks.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -82,9 +80,9 @@ class _HomeTabState extends State<HomeTab> {
                   children: [
                     // Menu Icon
                     IconButton(
-                      icon: const Icon(Icons.menu, size: 28), // Menu Icon
+                      icon: const Icon(Icons.menu, size: 28),
                       onPressed: () {
-                        Scaffold.of(context).openDrawer(); // Open Drawer when clicked
+                        Scaffold.of(context).openDrawer();
                       },
                     ),
                     const Text(
@@ -93,7 +91,6 @@ class _HomeTabState extends State<HomeTab> {
                     ),
                     Row(
                       children: [
-                        // 🔥 Notifications Icon with Navigation
                         IconButton(
                           icon: const Icon(Icons.notifications_outlined),
                           onPressed: () {
@@ -152,27 +149,12 @@ class _HomeTabState extends State<HomeTab> {
 
                       const SizedBox(height: 24),
 
-                      // Upcoming Tasks
-                      _buildSectionHeader(context, 'Upcoming Tasks'),
-                      const SizedBox(height: 8),
-                      const TaskCard(
-                        title: 'Apply Fertilizer',
-                        description: 'Apply NPK fertilizer to corn field',
-                        date: 'Today',
-                        isCompleted: false,
-                      ),
-                      const SizedBox(height: 12),
-                      const TaskCard(
-                        title: 'Irrigation Check',
-                        description: 'Check irrigation system in sector B',
-                        date: 'Tomorrow',
-                        isCompleted: false,
-                      ),
+                      const UpcomingTasksWidget(),
 
                       const SizedBox(height: 24),
 
                       // Market Prices
-                      _buildSectionHeader(context, 'Market Prices'),
+                      _buildMarketPricesHeader(context),
                       const SizedBox(height: 8),
                       _buildMarketPrices(),
                     ],
@@ -186,7 +168,7 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  /// Build Farm Health Overview
+  // Build Farm Health Overview
   Widget _buildHealthOverview(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -251,32 +233,43 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  /// Build Section Header
-  Widget _buildSectionHeader(BuildContext context, String title) {
+  // Build Market Prices Header with Navigation
+  Widget _buildMarketPricesHeader(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          title,
+          'Market Prices',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),
-        TextButton(
-          onPressed: () {},
-          child: const Text('View All'),
+        TextButton.icon(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MarketTab(),
+              ),
+            );
+          },
+          icon: const Icon(HugeIcons.strokeRoundedLinkCircle02, size: 16),
+          label: const Text('View All'),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            minimumSize: Size.zero,
+          ),
         ),
       ],
     );
   }
 
-  /// Build Market Prices
+  // Build Market Prices
   Widget _buildMarketPrices() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: _selectedCrops.map((crop) {
-          // Get crop data or show placeholder if not loaded yet
           final cropData = _cropData[crop];
           if (cropData == null) {
             return Padding(
@@ -294,7 +287,7 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  /// Build Health Indicator
+  // Build Health Indicator
   Widget _buildHealthIndicator(
       BuildContext context,
       String title,
