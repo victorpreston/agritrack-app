@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 
 class CropPriceChart extends StatelessWidget {
-  const CropPriceChart({super.key});
+  final List<Map<String, dynamic>> data;
+  final String timeRange;
+
+  const CropPriceChart({
+    super.key,
+    required this.data,
+    required this.timeRange,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // This is a placeholder for a real chart implementation
-    // In a real app, you would use a charting library like fl_chart or syncfusion_flutter_charts
+    // Extract price data from the provided history data
+    final priceData = data.map((item) => item['price'] as double).toList();
+
     return CustomPaint(
       size: const Size(double.infinity, 200),
       painter: ChartPainter(
         context: context,
-        data: const [6.9, 7.1, 6.8, 7.0, 7.2, 7.1, 7.3, 7.25],
+        data: priceData.isNotEmpty ? priceData : const [6.9, 7.1, 6.8, 7.0, 7.2, 7.1, 7.3, 7.25],
+        timeRange: timeRange,
+        dates: data.isNotEmpty ? data.map((item) => item['date'].toString()).toList() : [],
       ),
     );
   }
@@ -20,8 +30,15 @@ class CropPriceChart extends StatelessWidget {
 class ChartPainter extends CustomPainter {
   final BuildContext context;
   final List<double> data;
+  final String timeRange;
+  final List<String> dates;
 
-  ChartPainter({required this.context, required this.data});
+  ChartPainter({
+    required this.context,
+    required this.data,
+    this.timeRange = '1W',
+    this.dates = const [],
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -130,10 +147,42 @@ class ChartPainter extends CustomPainter {
     );
     textPainter.layout();
     textPainter.paint(canvas, Offset(5, size.height - 15));
+
+    // Draw time range label
+    textPainter.text = TextSpan(
+      text: timeRange,
+      style: textStyle.copyWith(fontWeight: FontWeight.bold),
+    );
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(size.width - textPainter.width - 5, 5));
+
+    // Add date labels if available
+    if (dates.isNotEmpty && data.length > 1) {
+      // Draw start date
+      textPainter.text = TextSpan(
+        text: dates.first,
+        style: textStyle,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(5, size.height - 30));
+
+      // Draw end date
+      textPainter.text = TextSpan(
+        text: dates.last,
+        style: textStyle,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(size.width - textPainter.width - 5, size.height - 30));
+    }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    if (oldDelegate is ChartPainter) {
+      return oldDelegate.data != data ||
+          oldDelegate.timeRange != timeRange ||
+          oldDelegate.dates != dates;
+    }
     return true;
   }
 }
