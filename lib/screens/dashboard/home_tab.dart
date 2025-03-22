@@ -2,11 +2,69 @@ import 'package:flutter/material.dart';
 import '../../widgets/app_drawer.dart';
 import '../../widgets/weather_card.dart';
 import '../../widgets/task_card.dart';
-import '../../widgets/market_price_card.dart';
-import '../notifications/notifications_screen.dart'; // Import Notifications Screen
+// Remove the conflicting import
+// import '../../widgets/market_price_card.dart';
+import '../notifications/notifications_screen.dart';
+import 'dart:async';
 
-class HomeTab extends StatelessWidget {
+// Import the CommoditiesService
+import '../../services/commodities_service.dart';
+import 'home/price_card.dart';
+
+class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
+
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  // Initialize CommoditiesService
+  final CommoditiesService _commoditiesService = CommoditiesService();
+
+  // Keep track of subscriptions to cancel them when widget is disposed
+  final List<StreamSubscription> _subscriptions = [];
+
+  // Store crop data
+  final Map<String, CropPriceData> _cropData = {};
+
+  // Selected crops to display
+  final List<String> _selectedCrops = ['Corn', 'Wheat', 'Soybean'];
+
+  @override
+  void initState() {
+    super.initState();
+    // Subscribe to price streams for selected crops
+    for (final crop in _selectedCrops) {
+      _subscribeToPrice(crop);
+    }
+  }
+
+  @override
+  void dispose() {
+    // Cancel all subscriptions
+    for (final subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    _subscriptions.clear();
+
+    // Dispose commodities service
+    _commoditiesService.dispose();
+    super.dispose();
+  }
+
+  // Subscribe to price stream for a crop
+  void _subscribeToPrice(String crop) {
+    final subscription = _commoditiesService
+        .getPriceStream(crop)
+        .listen((data) {
+      setState(() {
+        _cropData[crop] = data;
+      });
+    });
+
+    _subscriptions.add(subscription);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,31 +272,24 @@ class HomeTab extends StatelessWidget {
 
   /// Build Market Prices
   Widget _buildMarketPrices() {
-    return const SingleChildScrollView(
+    return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: [
-          MarketPriceCard(
-            cropName: 'Corn',
-            price: 7.25,
-            change: 0.35,
-            isUp: true,
-          ),
-          SizedBox(width: 12),
-          MarketPriceCard(
-            cropName: 'Wheat',
-            price: 6.80,
-            change: 0.12,
-            isUp: false,
-          ),
-          SizedBox(width: 12),
-          MarketPriceCard(
-            cropName: 'Soybeans',
-            price: 14.50,
-            change: 0.75,
-            isUp: true,
-          ),
-        ],
+        children: _selectedCrops.map((crop) {
+          // Get crop data or show placeholder if not loaded yet
+          final cropData = _cropData[crop];
+          if (cropData == null) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: LoadingMarketPriceCard(cropName: crop),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: MarketPriceCard(data: cropData),
+          );
+        }).toList(),
       ),
     );
   }
