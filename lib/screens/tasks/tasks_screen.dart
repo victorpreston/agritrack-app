@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../models/task_model.dart';
+import '../../services/task_storage_service.dart';
 import '../../theme/app_theme.dart';
 import 'add_task_screen.dart';
 import 'task_detail_screen.dart';
@@ -14,13 +16,32 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<Task> tasks = sampleTasks;
+  List<Task> tasks = [];
   String _selectedFilter = 'All';
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _loadTasks();
+  }
+
+  Future<void> _loadTasks() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final loadedTasks = await TaskStorageService.loadTasks();
+
+    setState(() {
+      tasks = loadedTasks;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _saveTasks() async {
+    await TaskStorageService.saveTasks(tasks);
   }
 
   @override
@@ -41,10 +62,11 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
       setState(() {
         tasks.add(newTask);
       });
+      await _saveTasks();
     }
   }
 
-  void _toggleTaskCompletion(String taskId) {
+  void _toggleTaskCompletion(String taskId) async {
     setState(() {
       final taskIndex = tasks.indexWhere((task) => task.id == taskId);
       if (taskIndex != -1) {
@@ -53,12 +75,16 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
         );
       }
     });
+
+    await _saveTasks();
   }
 
-  void _deleteTask(String taskId) {
+  void _deleteTask(String taskId) async {
     setState(() {
       tasks.removeWhere((task) => task.id == taskId);
     });
+
+    await _saveTasks();
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -66,6 +92,17 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
         backgroundColor: Colors.red,
       ),
     );
+  }
+
+  void _updateTask(Task updatedTask) async {
+    setState(() {
+      final index = tasks.indexWhere((task) => task.id == updatedTask.id);
+      if (index != -1) {
+        tasks[index] = updatedTask;
+      }
+    });
+
+    await _saveTasks();
   }
 
   List<Task> _getFilteredTasks() {
@@ -105,7 +142,9 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
           ],
         ),
       ),
-      body: Column(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
         children: [
           // Filter chips
           Padding(
@@ -188,11 +227,12 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TaskDetailScreen(task: task),
+              builder: (context) => TaskDetailScreen(
+                task: task,
+                onTaskUpdated: _updateTask,
+              ),
             ),
-          ).then((_) {
-            setState(() {});
-          });
+          );
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -268,7 +308,7 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.flag,
+                                    HugeIcons.strokeRoundedNoteDone,
                                     size: 14,
                                     color: task.priorityColor,
                                   ),
@@ -299,11 +339,12 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TaskDetailScreen(task: task),
+                            builder: (context) => TaskDetailScreen(
+                              task: task,
+                              onTaskUpdated: _updateTask,
+                            ),
                           ),
-                        ).then((_) {
-                          setState(() {});
-                        });
+                        );
                       } else if (value == 'toggle') {
                         _toggleTaskCompletion(task.id);
                       }

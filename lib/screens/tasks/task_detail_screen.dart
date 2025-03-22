@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../models/task_model.dart';
 import '../../theme/app_theme.dart';
 import 'add_task_screen.dart';
@@ -6,8 +7,13 @@ import 'package:intl/intl.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final Task task;
+  final Function(Task) onTaskUpdated;
 
-  const TaskDetailScreen({super.key, required this.task});
+  const TaskDetailScreen({
+    super.key,
+    required this.task,
+    required this.onTaskUpdated,
+  });
 
   @override
   State<TaskDetailScreen> createState() => _TaskDetailScreenState();
@@ -26,6 +32,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     setState(() {
       _task = _task.copyWith(isCompleted: !_task.isCompleted);
     });
+    widget.onTaskUpdated(_task);
   }
 
   void _editTask() async {
@@ -40,6 +47,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       setState(() {
         _task = updatedTask;
       });
+      widget.onTaskUpdated(_task);
     }
   }
 
@@ -118,7 +126,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.flag,
+                          HugeIcons.strokeRoundedNoteDone,
                           size: 16,
                           color: _task.priorityColor,
                         ),
@@ -225,7 +233,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       Navigator.pop(context);
                     },
                     icon: const Icon(Icons.arrow_back),
-                    label: const Text('Back'),
+                    label: const Text(''),//Back
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppTheme.primaryColor,
                       side: const BorderSide(color: AppTheme.primaryColor),

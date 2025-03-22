@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../models/task_model.dart';
 import '../../theme/app_theme.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  final Task? task; // If provided, we're editing an existing task
+  final Task? task;
 
   const AddTaskScreen({super.key, this.task});
 
@@ -315,7 +316,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           child: Column(
             children: [
               Icon(
-                Icons.flag,
+                HugeIcons.strokeRoundedNoteDone,
                 color: _selectedPriority == priority ? color : Colors.grey,
               ),
               const SizedBox(height: 4),
@@ -333,4 +334,3 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 }
-

@@ -74,6 +74,32 @@ class Task {
       category: category ?? this.category,
     );
   }
+
+  // Convert Task to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'dueDate': dueDate.millisecondsSinceEpoch,
+      'priority': priority.index,
+      'isCompleted': isCompleted,
+      'category': category,
+    };
+  }
+
+  // Create Task from JSON
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      dueDate: DateTime.fromMillisecondsSinceEpoch(json['dueDate']),
+      priority: TaskPriority.values[json['priority']],
+      isCompleted: json['isCompleted'],
+      category: json['category'],
+    );
+  }
 }
 
 // Sample task categories
@@ -85,57 +111,4 @@ final List<String> taskCategories = [
   'Harvesting',
   'Maintenance',
   'Other',
-];
-
-// Sample tasks data
-List<Task> sampleTasks = [
-  Task(
-    id: '1',
-    title: 'Apply Fertilizer',
-    description: 'Apply NPK fertilizer to corn field in sector A',
-    dueDate: DateTime.now().add(const Duration(days: 1)),
-    priority: TaskPriority.high,
-    category: 'Fertilization',
-  ),
-  Task(
-    id: '2',
-    title: 'Check Irrigation System',
-    description: 'Inspect irrigation system in sector B for leaks',
-    dueDate: DateTime.now().add(const Duration(days: 2)),
-    priority: TaskPriority.medium,
-    category: 'Irrigation',
-  ),
-  Task(
-    id: '3',
-    title: 'Plant Soybeans',
-    description: 'Plant soybeans in the eastern field',
-    dueDate: DateTime.now().add(const Duration(days: 5)),
-    priority: TaskPriority.medium,
-    category: 'Planting',
-  ),
-  Task(
-    id: '4',
-    title: 'Repair Tractor',
-    description: 'Schedule maintenance for the John Deere tractor',
-    dueDate: DateTime.now().add(const Duration(days: 7)),
-    priority: TaskPriority.low,
-    category: 'Maintenance',
-  ),
-  Task(
-    id: '5',
-    title: 'Spray Pesticide',
-    description: 'Apply organic pesticide to tomato plants',
-    dueDate: DateTime.now().subtract(const Duration(days: 1)),
-    priority: TaskPriority.high,
-    category: 'Pest Control',
-  ),
-  Task(
-    id: '6',
-    title: 'Harvest Corn',
-    description: 'Begin harvesting corn in the northern field',
-    dueDate: DateTime.now().add(const Duration(days: 14)),
-    priority: TaskPriority.high,
-    category: 'Harvesting',
-    isCompleted: true,
-  ),
 ];
