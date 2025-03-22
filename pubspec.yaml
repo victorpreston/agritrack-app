@@ -43,6 +43,8 @@ dependencies:
   image_picker: ^1.0.4
   intl_phone_field: ^3.1.0
   country_picker: ^2.0.20
+  http: ^1.1.0
+  fl_chart: ^0.63.0
 
 dev_dependencies:
   flutter_test:
