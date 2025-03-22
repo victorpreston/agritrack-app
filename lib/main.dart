@@ -13,6 +13,7 @@ void main() async {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxeGtyeG1oZ3BmeGZ1eGpnaWZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0NDQ2MTEsImV4cCI6MjA1ODAyMDYxMX0.CKqAyYV-ux3o1tHnrKx2tH_2qQWDfEfRUv1HQO0VnTk',
   );
 
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

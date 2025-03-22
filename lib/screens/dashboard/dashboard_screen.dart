@@ -1,7 +1,9 @@
 import 'package:hugeicons/hugeicons.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../tasks/add_task_screen.dart';
-import 'package:flutter/material.dart';
 import '../treatments/treatment_shop_screen.dart';
 import 'home_tab.dart';
 import 'disease_detection_tab.dart';
@@ -25,6 +27,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const ProfileTab(),
   ];
 
+  // Paths to your SVG files - update these with your actual file paths
+  final List<String> _svgIcons = [
+    'assets/navbar/home.svg',
+    'assets/navbar/scanner.svg',
+    'assets/navbar/market.svg',
+    'assets/navbar/user.svg',
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -35,73 +45,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _tabs[_selectedIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _selectedIndex,
+        height: 60.0,
+        items: List.generate(
+          _svgIcons.length,
+              (index) => SvgPicture.asset(
+            _svgIcons[index],
+            width: 26,
+            height: 26,
+            colorFilter: const ColorFilter.mode(
+              Colors.white,
+              BlendMode.srcIn,
             ),
-          ],
+          ),
         ),
-        child: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Theme.of(context).colorScheme.primary,
-          unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home_outlined,
-                size: 24,
-              ),
-              activeIcon: Icon(
-                Icons.home,
-                size: 24,
-                color: Colors.white,
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.document_scanner_outlined,
-                size: 24,
-              ),
-              activeIcon: Icon(
-                Icons.document_scanner,
-                size: 24,
-                color: Colors.white,
-              ),
-              label: 'Detect',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.trending_up_outlined,
-                size: 24,
-              ),
-              activeIcon: Icon(
-                Icons.trending_up,
-                size: 24,
-                color: Colors.white,
-              ),
-              label: 'Market',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person_outline,
-                size: 24,
-              ),
-              activeIcon: Icon(
-                Icons.person,
-                size: 24,
-                color: Colors.white,
-              ),
-              label: 'Profile',
-            ),
-          ],
-        ),
+        color: Theme.of(context).colorScheme.primary,
+        buttonBackgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.white,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        onTap: _onItemTapped,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

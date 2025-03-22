@@ -1,9 +1,16 @@
+import 'package:agritrack/services/task_notification_service.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-import '../treatments/treatment_shop_screen.dart';
+import '../tasks/task_detail_screen.dart';
+import '../../models/task_model.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+  final Function(Task)? onTaskUpdated;
+
+  const NotificationsScreen({
+    super.key,
+    this.onTaskUpdated,
+  });
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -11,11 +18,45 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final NotificationService _notificationService = NotificationService();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _loadNotifications();
+  }
+
+  Future<void> _loadNotifications() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // First, refresh task notifications to ensure we have the latest
+      await _notificationService.refreshTaskNotifications();
+
+      // Clean up notifications for completed tasks
+      await _notificationService.cleanUpCompletedTaskNotifications();
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading notifications: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -36,12 +77,22 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.check_circle_outline, // Flutter icon replacement
+              Icons.refresh,
               size: 24,
               color: AppTheme.primaryColor,
             ),
-            onPressed: () {
+            onPressed: _loadNotifications,
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.check_circle_outline,
+              size: 24,
+              color: AppTheme.primaryColor,
+            ),
+            onPressed: () async {
               // Mark all as read
+              await _notificationService.markAllAsRead();
+
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('All notifications marked as read'),
@@ -63,13 +114,20 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildNotificationsList(allNotifications),
-          _buildNotificationsList(allNotifications.where((n) => n.type == 'alert').toList()),
-          _buildNotificationsList(allNotifications.where((n) => n.type == 'update').toList()),
-        ],
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ValueListenableBuilder<List<NotificationItem>>(
+        valueListenable: _notificationService.notificationsNotifier,
+        builder: (context, notifications, _) {
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              _buildNotificationsList(notifications),
+              _buildNotificationsList(notifications.where((n) => n.type == 'alert').toList()),
+              _buildNotificationsList(notifications.where((n) => n.type == 'update').toList()),
+            ],
+          );
+        },
       ),
     );
   }
@@ -81,7 +139,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.notifications_none, // Flutter icon replacement
+              Icons.notifications_none,
               size: 64,
               color: Colors.grey,
             ),
@@ -98,14 +156,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
       );
     }
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: notifications.length,
-      separatorBuilder: (context, index) => const Divider(),
-      itemBuilder: (context, index) {
-        final notification = notifications[index];
-        return _buildNotificationItem(notification);
-      },
+    return RefreshIndicator(
+      onRefresh: _loadNotifications,
+      child: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: notifications.length,
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (context, index) {
+          final notification = notifications[index];
+          return _buildNotificationItem(notification);
+        },
+      ),
     );
   }
 
@@ -122,33 +183,37 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
         ),
       ),
       direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
+      onDismissed: (direction) async {
         // Remove notification
-        setState(() {
-          allNotifications.removeWhere((n) => n.id == notification.id);
-        });
+        await _notificationService.removeNotification(notification.id);
       },
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(vertical: 8),
         leading: CircleAvatar(
           backgroundColor: _getNotificationColor(notification.type).withOpacity(0.1),
           child: Icon(
-            _getNotificationIcon(notification.type), // Flutter icon replacement
+            _getNotificationIcon(notification.type),
             size: 24,
             color: _getNotificationColor(notification.type),
           ),
         ),
         title: Text(
           notification.title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: notification.isRead ? Colors.grey : Colors.black,
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text(notification.message),
+            Text(
+              notification.message,
+              style: TextStyle(
+                color: notification.isRead ? Colors.grey.shade500 : Colors.grey.shade700,
+              ),
+            ),
             const SizedBox(height: 4),
             Text(
               notification.time,
@@ -169,24 +234,41 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
             shape: BoxShape.circle,
           ),
         ),
-        onTap: () {
-          // Mark as read and handle notification
-          setState(() {
-            notification.isRead = true;
-          });
+        onTap: () async {
+          // Mark as read
+          await _notificationService.markAsRead(notification.id);
 
-          // Handle notification based on type
-          if (notification.type == 'alert' && notification.title.contains('Disease')) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const TreatmentShopScreen(),
-              ),
-            );
+          // Handle notification based on task
+          if (notification.task != null) {
+            _navigateToTaskDetail(notification.task!);
           }
         },
       ),
     );
+  }
+
+  void _navigateToTaskDetail(Task task) async {
+    final updatedTask = await Navigator.push<Task>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TaskDetailScreen(
+          task: task,
+          onTaskUpdated: (Task updated) {
+            // This will be called when the task is updated in the detail screen
+            if (widget.onTaskUpdated != null) {
+              widget.onTaskUpdated!(updated);
+            }
+            // Refresh notifications after task update
+            _loadNotifications();
+          },
+        ),
+      ),
+    );
+
+    // Refresh after returning from task detail screen
+    if (updatedTask != null) {
+      _loadNotifications();
+    }
   }
 
   Color _getNotificationColor(String type) {
@@ -211,70 +293,3 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
     }
   }
 }
-
-class NotificationItem {
-  final int id;
-  final String title;
-  final String message;
-  final String time;
-  final String type; // 'alert', 'update', etc.
-  bool isRead;
-
-  NotificationItem({
-    required this.id,
-    required this.title,
-    required this.message,
-    required this.time,
-    required this.type,
-    this.isRead = false,
-  });
-}
-
-// Sample notifications data
-List<NotificationItem> allNotifications = [
-  NotificationItem(
-    id: 1,
-    title: 'Disease Detected in Corn Field',
-    message: 'Our AI has detected signs of Northern Leaf Blight in your corn field. View recommended treatments.',
-    time: '2 hours ago',
-    type: 'alert',
-  ),
-  NotificationItem(
-    id: 2,
-    title: 'Weather Alert',
-    message: 'Heavy rain expected in your area in the next 24 hours. Consider protecting sensitive crops.',
-    time: '5 hours ago',
-    type: 'alert',
-  ),
-  NotificationItem(
-    id: 3,
-    title: 'Market Price Update',
-    message: 'Corn prices have increased by 5% in the last week. Check the market tab for details.',
-    time: 'Yesterday',
-    type: 'update',
-  ),
-  NotificationItem(
-    id: 4,
-    title: 'Treatment Delivered',
-    message: 'Your order #12345 has been delivered to your farm. Check your orders for details.',
-    time: '2 days ago',
-    type: 'update',
-    isRead: true,
-  ),
-  NotificationItem(
-    id: 5,
-    title: 'New Feature Available',
-    message: 'We\'ve added new crop prediction features. Check it out in the Analytics section!',
-    time: '3 days ago',
-    type: 'update',
-    isRead: true,
-  ),
-  NotificationItem(
-    id: 6,
-    title: 'Soil Moisture Low',
-    message: 'Soil moisture levels in Field B are below optimal levels. Consider irrigation.',
-    time: '4 days ago',
-    type: 'alert',
-    isRead: true,
-  ),
-];

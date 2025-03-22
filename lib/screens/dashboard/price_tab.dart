@@ -21,7 +21,6 @@ class _PriceTabState extends State<PriceTab> {
   CropPriceData? _priceData;
   Map<String, CropPriceData> _allCropsData = {};
 
-
   final CommoditiesService _priceService = CommoditiesService();
   StreamSubscription<CropPriceData>? _priceStreamSubscription;
 
@@ -37,11 +36,15 @@ class _PriceTabState extends State<PriceTab> {
 
   @override
   void dispose() {
+    // Cancel the stream subscription in dispose
     _priceStreamSubscription?.cancel();
+    _priceService.dispose(); // Make sure the service is properly disposed
     super.dispose();
   }
 
   Future<void> _loadInitialData() async {
+    if (!mounted) return; // Check if widget is still mounted
+
     setState(() {
       _isLoading = true;
       _errorMessage = '';
@@ -59,6 +62,7 @@ class _PriceTabState extends State<PriceTab> {
   }
 
   void _setupCropStream() {
+    // Cancel any existing subscription first
     _priceStreamSubscription?.cancel();
 
     _priceStreamSubscription = _priceService
@@ -67,6 +71,9 @@ class _PriceTabState extends State<PriceTab> {
   }
 
   void _handlePriceUpdate(CropPriceData data) {
+    // Check if the widget is still mounted before calling setState
+    if (!mounted) return;
+
     setState(() {
       _priceData = data;
       _isLoading = false;
@@ -74,6 +81,9 @@ class _PriceTabState extends State<PriceTab> {
   }
 
   void _handleError(dynamic error) {
+    // Check if the widget is still mounted before calling setState
+    if (!mounted) return;
+
     setState(() {
       _isLoading = false;
       _errorMessage = error.toString();
@@ -82,6 +92,8 @@ class _PriceTabState extends State<PriceTab> {
 
   void _onCropChanged(String? newValue) {
     if (newValue != null && newValue != _selectedCrop) {
+      if (!mounted) return; // Check if widget is still mounted
+
       setState(() {
         _selectedCrop = newValue;
         _isLoading = true;
@@ -89,6 +101,8 @@ class _PriceTabState extends State<PriceTab> {
 
       // If we already have the data cached
       if (_allCropsData.containsKey(newValue)) {
+        if (!mounted) return; // Check again before setState
+
         setState(() {
           _priceData = _allCropsData[newValue];
           _isLoading = false;
@@ -101,7 +115,7 @@ class _PriceTabState extends State<PriceTab> {
   }
 
   void _onTimeRangeChanged(String range) {
-    if (range != _selectedTimeRange) {
+    if (range != _selectedTimeRange && mounted) { // Check if mounted
       setState(() {
         _selectedTimeRange = range;
       });
@@ -166,6 +180,7 @@ class _PriceTabState extends State<PriceTab> {
     );
   }
 
+  // Rest of the widget code remains unchanged
   Widget _buildCropSelector() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

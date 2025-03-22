@@ -46,6 +46,7 @@ dependencies:
   http: ^1.1.0
   fl_chart: ^0.63.0
   flutter_animate: ^4.5.0
+  curved_navigation_bar: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +84,10 @@ flutter:
     - assets/auth/google.svg
     - assets/auth/apple.svg
     - assets/auth/facebook-1.svg
+    - assets/navbar/home.svg
+    - assets/navbar/market.svg
+    - assets/navbar/scanner.svg
+    - assets/navbar/user.svg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
