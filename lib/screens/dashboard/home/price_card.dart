@@ -11,90 +11,86 @@ class MarketPriceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final isUp = data.priceChange >= 0;
     final priceFormatted = data.currentPrice.toStringAsFixed(2);
     final changeFormatted = data.percentChange.abs().toStringAsFixed(1);
 
-    // Extract currency symbol from the units
     final currencySymbol = data.units.split('/')[0];
 
-    return Container(
-      width: 140,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                data.crop,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+    final upColor = theme.brightness == Brightness.light
+        ? const Color(0xFF22C55E)
+        : const Color(0xFF34D399);
+
+    final downColor = theme.brightness == Brightness.light
+        ? theme.colorScheme.error
+        : const Color(0xFFEF4444);
+
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      child: Container(
+        width: 140,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  data.crop,
+                  style: theme.textTheme.titleMedium,
                 ),
-              ),
-              const Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                  color: isUp ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
+                const Spacer(),
+                Container(
+                  decoration: BoxDecoration(
+                    color: isUp
+                        ? upColor.withOpacity(0.1)
+                        : downColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  child: Icon(
+                    isUp ? Icons.arrow_upward : Icons.arrow_downward,
+                    color: isUp ? upColor : downColor,
+                    size: 12,
+                  ),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                child: Icon(
-                  isUp ? Icons.arrow_upward : Icons.arrow_downward,
-                  color: isUp ? Colors.green : Colors.red,
-                  size: 12,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '$currencySymbol $priceFormatted',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+              ],
             ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Icon(
-                isUp ? Icons.trending_up : Icons.trending_down,
-                color: isUp ? Colors.green : Colors.red,
-                size: 14,
+            const SizedBox(height: 12),
+            Text(
+              '$currencySymbol $priceFormatted',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(width: 4),
-              Text(
-                '$changeFormatted%',
-                style: TextStyle(
-                  color: isUp ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            data.lastUpdated,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 10,
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Icon(
+                  isUp ? Icons.trending_up : Icons.trending_down,
+                  color: isUp ? upColor : downColor,
+                  size: 14,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '$changeFormatted%',
+                  style: TextStyle(
+                    color: isUp ? upColor : downColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              data.lastUpdated,
+              style: theme.textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -110,31 +106,33 @@ class LoadingMarketPriceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      height: 140,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            cropName,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+    final theme = Theme.of(context);
+
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Container(
+        width: 140,
+        height: 140,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              cropName,
+              style: theme.textTheme.titleMedium,
             ),
-          ),
-          const SizedBox(height: 8),
-          const CircularProgressIndicator(
-            strokeWidth: 2,
-          ),
-          const SizedBox(height: 8),
-          const Text('Loading...'),
-        ],
+            const SizedBox(height: 8),
+            CircularProgressIndicator(
+              strokeWidth: 2,
+              color: theme.primaryColor,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Loading...',
+              style: theme.textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }

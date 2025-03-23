@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import '../../services/profile_service.dart';
+import '../../services/farm_service.dart';
+import '../../services/weather_service.dart';
+import '../../models/farm.dart';
 import '../../widgets/app_drawer.dart';
 import '../../widgets/weather_card.dart';
 import '../notifications/notifications_screen.dart';
 import 'home/farm_health.dart';
-import 'farm_details_screen.dart'; // Import the new screen
+import 'farm_details_screen.dart';
 import 'market_tab.dart';
 import 'dart:async';
 import '../../services/commodities_service.dart';
@@ -15,7 +18,6 @@ import '../../models/user_profile.dart';
 import 'home/price_card.dart';
 import 'home/upcoming_tasks.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -30,9 +32,16 @@ class _HomeTabState extends State<HomeTab> {
   final NotificationService _notificationService = NotificationService();
   final UserProfileService _profileService = UserProfileService();
   final AuthService _authService = AuthService();
+  final FarmService _farmService = FarmService();
+  final WeatherService _weatherService = WeatherService();
 
-  // User profile
+  // User profile and farm
   UserProfile? _userProfile;
+  Farm? _farm;
+
+  // Weather data
+  WeatherData? _weatherData;
+  bool _isLoadingWeather = true;
 
   // Keep track of subscriptions to cancel them when widget is disposed
   final List<StreamSubscription> _subscriptions = [];
@@ -43,8 +52,8 @@ class _HomeTabState extends State<HomeTab> {
   // Selected crops to display
   final List<String> _selectedCrops = ['Corn', 'Wheat', 'Soybean'];
 
-  // Mock farm location (for demonstration)
-  final LatLng _farmLocation = const LatLng(37.7749, -122.4194);
+  // Farm location
+  LatLng _farmLocation = const LatLng(37.7749, -122.4194);
 
   @override
   void initState() {
@@ -57,7 +66,7 @@ class _HomeTabState extends State<HomeTab> {
     // Initialize notification service
     _notificationService.initialize();
 
-    // Load user profile
+    // Load user profile and weather data
     _loadUserProfile();
   }
 
@@ -69,6 +78,58 @@ class _HomeTabState extends State<HomeTab> {
       if (mounted) {
         setState(() {
           _userProfile = profile;
+        });
+
+        // After loading profile, load farm data
+        if (profile != null && profile.farmId.isNotEmpty) {
+          await _loadFarmData(profile.farmId);
+        }
+      }
+    }
+  }
+
+  // Load farm data
+  Future<void> _loadFarmData(String farmId) async {
+    final farm = await _farmService.getFarm(farmId, context);
+    if (farm != null && mounted) {
+      setState(() {
+        _farm = farm;
+      });
+
+      // After loading farm data, load weather data
+      await _loadWeatherData(farm);
+    }
+  }
+
+  // Load weather data
+  Future<void> _loadWeatherData(Farm farm) async {
+    setState(() {
+      _isLoadingWeather = true;
+    });
+
+    try {
+      // Resolve farm location coordinates
+      final (lat, lon) = await _weatherService.resolveLocationCoordinates(farm, context);
+
+      // Update farm location for map
+      setState(() {
+        _farmLocation = LatLng(lat, lon);
+      });
+
+      // Get current weather data
+      final weatherData = await _weatherService.getCurrentWeather(lat, lon, farm.location);
+
+      if (mounted) {
+        setState(() {
+          _weatherData = weatherData;
+          _isLoadingWeather = false;
+        });
+      }
+    } catch (e) {
+      print('Error loading weather data: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingWeather = false;
         });
       }
     }
@@ -103,7 +164,7 @@ class _HomeTabState extends State<HomeTab> {
   // Get user initials for avatar fallback
   String _getUserInitials() {
     if (_userProfile == null || _userProfile!.fullName.isEmpty) {
-      return 'JD'; // Default fallback
+      return 'VP'; // Default fallback
     }
 
     final nameParts = _userProfile!.fullName.split(' ');
@@ -113,7 +174,7 @@ class _HomeTabState extends State<HomeTab> {
       return nameParts[0][0];
     }
 
-    return 'JD';
+    return 'VP';
   }
 
   void _navigateToFarmDetails() {
@@ -139,7 +200,7 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawer(), // Attach the AppDrawer here
+      drawer: const AppDrawer(),
       body: Builder(
         builder: (context) => SafeArea(
           child: Column(
@@ -170,21 +231,28 @@ class _HomeTabState extends State<HomeTab> {
                     ),
                     Row(
                       children: [
-                        // Notification Icon with Badge and circular background
                         ValueListenableBuilder<List<NotificationItem>>(
                           valueListenable: _notificationService.notificationsNotifier,
                           builder: (context, notifications, _) {
                             final unreadCount = _notificationService.unreadCount;
+                            final theme = Theme.of(context);
 
                             return Container(
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
+                                color: theme.brightness == Brightness.light
+                                    ? Colors.grey.shade200
+                                    : theme.colorScheme.surface.withOpacity(0.6),
                                 shape: BoxShape.circle,
                               ),
                               child: Stack(
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.notifications_outlined),
+                                    icon: Icon(
+                                      Icons.notifications_outlined,
+                                      color: theme.brightness == Brightness.dark
+                                          ? theme.colorScheme.onSurface
+                                          : null,
+                                    ),
                                     onPressed: () async {
                                       await Navigator.push(
                                         context,
@@ -192,7 +260,6 @@ class _HomeTabState extends State<HomeTab> {
                                           builder: (context) => const NotificationsScreen(),
                                         ),
                                       );
-                                      // Force refresh when returning from notifications
                                       setState(() {});
                                     },
                                   ),
@@ -203,7 +270,7 @@ class _HomeTabState extends State<HomeTab> {
                                       child: Container(
                                         padding: const EdgeInsets.all(2),
                                         decoration: BoxDecoration(
-                                          color: Colors.red,
+                                          color: theme.colorScheme.error,
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         constraints: const BoxConstraints(
@@ -227,7 +294,6 @@ class _HomeTabState extends State<HomeTab> {
                           },
                         ),
                         const SizedBox(width: 8),
-                        // User profile avatar with image or initials
                         _userProfile?.profilePicture.isNotEmpty == true
                             ? CircleAvatar(
                           radius: 20,
@@ -235,7 +301,7 @@ class _HomeTabState extends State<HomeTab> {
                         )
                             : CircleAvatar(
                           radius: 20,
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Colors.greenAccent.shade400,
                           child: Text(
                             _getUserInitials(),
                             style: const TextStyle(
@@ -258,12 +324,18 @@ class _HomeTabState extends State<HomeTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Weather Card
-                      const WeatherCard(
-                        temperature: 28,
-                        condition: 'Sunny',
-                        location: 'Farm Location',
-                        humidity: 65,
-                        windSpeed: 10,
+                      _weatherData != null
+                          ? WeatherCard(
+                        temperature: _weatherData!.temperature,
+                        condition: _weatherData!.condition,
+                        location: _weatherData!.location,
+                        humidity: _weatherData!.humidity,
+                        windSpeed: _weatherData!.windSpeed,
+                        uvIndex: _weatherData!.uvIndex,
+                        isLoading: _isLoadingWeather,
+                      )
+                          : WeatherCard(
+                        isLoading: _isLoadingWeather,
                       ),
                       const SizedBox(height: 24),
 

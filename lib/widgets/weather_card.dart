@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
 class WeatherCard extends StatelessWidget {
-  final int temperature;
+  final double temperature;
   final String condition;
   final String location;
   final int humidity;
-  final int windSpeed;
+  final double windSpeed;
+  final int uvIndex;
+  final bool isLoading;
 
   const WeatherCard({
     super.key,
-    required this.temperature,
-    required this.condition,
-    required this.location,
-    required this.humidity,
-    required this.windSpeed,
+    this.temperature = 0,
+    this.condition = 'Unknown',
+    this.location = 'Unknown',
+    this.humidity = 0,
+    this.windSpeed = 0,
+    this.uvIndex = 0,
+    this.isLoading = false,
   });
 
   @override
@@ -38,7 +42,13 @@ class WeatherCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: isLoading
+          ? const Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+        ),
+      )
+          : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -73,7 +83,7 @@ class WeatherCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$temperature°C',
+                '${temperature.round()}°C',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 36,
@@ -102,13 +112,13 @@ class WeatherCard extends StatelessWidget {
               _buildWeatherDetail(
                 context,
                 Icons.air,
-                '$windSpeed km/h',
+                '${windSpeed.toStringAsFixed(1)} km/h',
                 'Wind',
               ),
               _buildWeatherDetail(
                 context,
                 Icons.wb_sunny,
-                'UV 3',
+                'UV $uvIndex',
                 'UV Index',
               ),
             ],
@@ -153,21 +163,28 @@ class WeatherCard extends StatelessWidget {
   Widget _getWeatherIcon(String condition) {
     IconData iconData;
 
+    // Mapping API weather conditions to icons
     switch (condition.toLowerCase()) {
-      case 'sunny':
+      case 'clear':
         iconData = Icons.wb_sunny;
         break;
-      case 'cloudy':
+      case 'clouds':
         iconData = Icons.cloud;
         break;
-      case 'rainy':
+      case 'rain':
+      case 'drizzle':
         iconData = Icons.water_drop;
         break;
-      case 'stormy':
+      case 'thunderstorm':
         iconData = Icons.thunderstorm;
         break;
-      case 'snowy':
+      case 'snow':
         iconData = Icons.ac_unit;
+        break;
+      case 'mist':
+      case 'fog':
+      case 'haze':
+        iconData = Icons.cloud_queue;
         break;
       default:
         iconData = Icons.wb_sunny;

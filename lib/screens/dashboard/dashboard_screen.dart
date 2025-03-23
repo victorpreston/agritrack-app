@@ -26,7 +26,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const ProfileTab(),
   ];
 
-
   final List<String> _svgIcons = [
     'assets/navbar/home.svg',
     'assets/navbar/scanner.svg',
@@ -42,6 +41,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    // Get appropriate background color based on theme
+    final backgroundColor = isDarkMode
+        ? theme.scaffoldBackgroundColor
+        : Colors.white;
+
     return Scaffold(
       body: _tabs[_selectedIndex],
       bottomNavigationBar: CurvedNavigationBar(
@@ -59,9 +66,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ),
-        color: Theme.of(context).colorScheme.primary,
-        buttonBackgroundColor: Theme.of(context).colorScheme.primary,
-        backgroundColor: Colors.white,
+        color: theme.colorScheme.primary,
+        buttonBackgroundColor: theme.colorScheme.primary,
+        backgroundColor: backgroundColor,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
         onTap: _onItemTapped,
@@ -71,7 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Show quick actions menu
           _showQuickActionsMenu();
         },
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: theme.colorScheme.primary,
         child: const Icon(
           HugeIcons.strokeRoundedMore,
           size: 24,
@@ -82,8 +89,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _showQuickActionsMenu() {
+    final theme = Theme.of(context);
+
     showModalBottomSheet(
       context: context,
+      backgroundColor: theme.scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -93,25 +103,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 'Quick Actions',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: theme.textTheme.titleLarge,
               ),
               const SizedBox(height: 20),
               ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
                   child: Icon(
                     HugeIcons.strokeRoundedSearchFocus,
                     size: 24,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
-                title: const Text('Scan Crop Disease'),
-                subtitle: const Text('Take a photo to detect diseases'),
+                title: Text('Scan Crop Disease', style: theme.textTheme.titleMedium),
+                subtitle: Text('Take a photo to detect diseases', style: theme.textTheme.bodyMedium),
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
@@ -121,15 +128,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
                   child: Icon(
                     HugeIcons.strokeRoundedShoppingBagAdd,
                     size: 24,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
-                title: const Text('Shop Products'),
-                subtitle: const Text('Browse agricultural products'),
+                title: Text('Shop Products', style: theme.textTheme.titleMedium),
+                subtitle: Text('Browse agricultural products', style: theme.textTheme.bodyMedium),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -142,15 +149,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
                   child: Icon(
                     HugeIcons.strokeRoundedNoteAdd,
                     size: 24,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
-                title: const Text('Add Task'),
-                subtitle: const Text('Create a new farming task'),
+                title: Text('Add Task', style: theme.textTheme.titleMedium),
+                subtitle: Text('Create a new farming task', style: theme.textTheme.bodyMedium),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -163,15 +170,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
                   child: Icon(
                     Icons.analytics_outlined,
                     size: 24,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
-                title: const Text('View Analytics'),
-                subtitle: const Text('Check Market Analytics'),
+                title: Text('View Analytics', style: theme.textTheme.titleMedium),
+                subtitle: Text('Check Market Analytics', style: theme.textTheme.bodyMedium),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
