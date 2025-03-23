@@ -116,15 +116,21 @@ class _HomeTabState extends State<HomeTab> {
     return 'JD';
   }
 
-  // Navigate to farm details screen
   void _navigateToFarmDetails() {
+    final farmId = _userProfile?.farmId;
+
+    if (farmId == null || farmId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No farm associated with this account')),
+      );
+      return;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => FarmDetailsScreen(
-          farmId: 'farm123',
-          farmName: 'Main Farm',
-          farmLocation: _farmLocation,
+          farmId: farmId,
         ),
       ),
     );

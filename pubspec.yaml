@@ -48,6 +48,7 @@ dependencies:
   flutter_animate: ^4.5.0
   curved_navigation_bar: ^1.0.3
   google_maps_flutter: ^2.3.0
+  geocoding: ^2.1.0
 
 dev_dependencies:
   flutter_test:
