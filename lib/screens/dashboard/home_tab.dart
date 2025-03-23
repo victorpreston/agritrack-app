@@ -5,6 +5,7 @@ import '../../widgets/app_drawer.dart';
 import '../../widgets/weather_card.dart';
 import '../notifications/notifications_screen.dart';
 import 'home/farm_health.dart';
+import 'farm_details_screen.dart'; // Import the new screen
 import 'market_tab.dart';
 import 'dart:async';
 import '../../services/commodities_service.dart';
@@ -13,6 +14,8 @@ import '../../services/auth_service.dart';
 import '../../models/user_profile.dart';
 import 'home/price_card.dart';
 import 'home/upcoming_tasks.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -39,6 +42,9 @@ class _HomeTabState extends State<HomeTab> {
 
   // Selected crops to display
   final List<String> _selectedCrops = ['Corn', 'Wheat', 'Soybean'];
+
+  // Mock farm location (for demonstration)
+  final LatLng _farmLocation = const LatLng(37.7749, -122.4194);
 
   @override
   void initState() {
@@ -97,7 +103,7 @@ class _HomeTabState extends State<HomeTab> {
   // Get user initials for avatar fallback
   String _getUserInitials() {
     if (_userProfile == null || _userProfile!.fullName.isEmpty) {
-      return ''; // Just return empty string if no name available
+      return 'JD'; // Default fallback
     }
 
     final nameParts = _userProfile!.fullName.split(' ');
@@ -107,7 +113,21 @@ class _HomeTabState extends State<HomeTab> {
       return nameParts[0][0];
     }
 
-    return '';
+    return 'JD';
+  }
+
+  // Navigate to farm details screen
+  void _navigateToFarmDetails() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FarmDetailsScreen(
+          farmId: 'farm123',
+          farmName: 'Main Farm',
+          farmLocation: _farmLocation,
+        ),
+      ),
+    );
   }
 
   @override
@@ -201,32 +221,20 @@ class _HomeTabState extends State<HomeTab> {
                           },
                         ),
                         const SizedBox(width: 8),
-                        // User profile avatar with image or initials - matched size with notifications
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            shape: BoxShape.circle,
-                          ),
-                          child: _userProfile?.profilePicture.isNotEmpty == true
-                              ? ClipOval(
-                            child: Image.network(
-                              _userProfile!.profilePicture,
-                              width: 48,
-                              height: 48,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                              : SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: Center(
-                              child: Text(
-                                _getUserInitials(),
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                        // User profile avatar with image or initials
+                        _userProfile?.profilePicture.isNotEmpty == true
+                            ? CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(_userProfile!.profilePicture),
+                        )
+                            : CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.blue,
+                          child: Text(
+                            _getUserInitials(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -253,8 +261,10 @@ class _HomeTabState extends State<HomeTab> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Farm Health Overview (now using the extracted widget)
-                      const FarmHealthWidget(),
+                      // Farm Health Overview with onViewMoreTap callback
+                      FarmHealthWidget(
+                        onViewMoreTap: _navigateToFarmDetails,
+                      ),
 
                       const SizedBox(height: 24),
 

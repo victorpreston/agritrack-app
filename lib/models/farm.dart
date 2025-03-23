@@ -6,7 +6,7 @@ class Farm {
   final String ownerId;
 
   Farm({
-    this.id = '', // Default to empty string for new farms
+    this.id = '',
     required this.name,
     required this.location,
     required this.totalArea,
@@ -14,7 +14,6 @@ class Farm {
   });
 
   Map<String, dynamic> toJson() {
-    // Don't include empty ID in the JSON when creating a new record
     final json = {
       'name': name,
       'location': location,
@@ -22,7 +21,6 @@ class Farm {
       'owner_id': ownerId,
     };
 
-    // Only include ID if it's not empty (for updates)
     if (id.isNotEmpty) {
       json['id'] = id;
     }
@@ -30,7 +28,6 @@ class Farm {
     return json;
   }
 
-  // Factory constructor to create a Farm from a JSON map
   factory Farm.fromJson(Map<String, dynamic> json) {
     return Farm(
       id: json['id'] ?? '',

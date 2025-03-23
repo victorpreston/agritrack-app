@@ -45,4 +45,19 @@ class FarmService {
       showNotificationBanner(context, 'Failed to update farm.');
     }
   }
+
+  // Fetch farms by owner ID
+  Future<List<Farm>> getFarmsByOwnerId(String ownerId, BuildContext context) async {
+    try {
+      final response = await _supabase
+          .from('farms')
+          .select()
+          .eq('owner_id', ownerId);
+
+      return (response as List).map((farm) => Farm.fromJson(farm)).toList();
+    } catch (error) {
+      showNotificationBanner(context, 'Failed to fetch farms.');
+      return [];
+    }
+  }
 }

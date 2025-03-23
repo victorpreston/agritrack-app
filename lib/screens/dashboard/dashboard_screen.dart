@@ -2,7 +2,6 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../tasks/add_task_screen.dart';
 import '../treatments/treatment_shop_screen.dart';
 import 'home_tab.dart';
@@ -27,7 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const ProfileTab(),
   ];
 
-  // Paths to your SVG files - update these with your actual file paths
+
   final List<String> _svgIcons = [
     'assets/navbar/home.svg',
     'assets/navbar/scanner.svg',
@@ -116,7 +115,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
-                    _selectedIndex = 1; // Navigate to disease detection tab
+                    _selectedIndex = 1;
                   });
                 },
               ),
