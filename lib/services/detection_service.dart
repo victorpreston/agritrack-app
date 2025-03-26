@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class VisionApiService {
-  final String _apiKey = 'AIzaSyACzVLAMqW_XAGZPizLLSyDEbn1wHnj9t0';
+  final String _apiKey = 'CLOUD_VISION_API_KEY';
   final String _visionApiUrl = 'https://vision.googleapis.com/v1/images:annotate';
 
   Future<Map<String, dynamic>> analyzeImage(File imageFile) async {
