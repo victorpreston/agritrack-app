@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class GeminiApiService {
-  final String _apiKey = 'AIzaSyD06U64MI-xdnDLzKgH-Mew9rFj9XMpIbg';
+  final String _apiKey = 'GEMINI_API_KEY';
   final String _geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
   Future<String> getResponse(String query, {String? contextData}) async {
