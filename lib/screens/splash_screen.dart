@@ -61,20 +61,23 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
-            color: Colors.white,
+            color: theme.scaffoldBackgroundColor,
             child: Stack(
               children: [
-
+                // Soil background
                 Positioned(
                   bottom: 0,
                   right: 0,
                   child: CustomPaint(
                     size: Size(constraints.maxWidth, constraints.maxHeight * 0.4),
-                    painter: SoilPainter(),
+                    painter: SoilPainter(isDarkMode: isDarkMode),
                   ),
                 ),
 
@@ -91,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ),
                 ),
 
-                _buildClouds(),
+                _buildClouds(isDarkMode),
 
                 // Main content
                 Positioned(
@@ -102,17 +105,17 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-
+                      // App Icon
                       FadeTransition(
                         opacity: _animation,
                         child: ScaleTransition(
                           scale: _animation,
                           child: ShaderMask(
                             shaderCallback: (Rect bounds) {
-                              return LinearGradient(
+                              return const LinearGradient(
                                 colors: [
                                   AppTheme.primaryColor,
-                                  Colors.green.shade300,
+                                  AppTheme.lightGreen,
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -132,20 +135,20 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         opacity: _animation,
                         child: ShaderMask(
                           shaderCallback: (Rect bounds) {
-                            return LinearGradient(
+                            return const LinearGradient(
                               colors: [
                                 AppTheme.primaryColor,
-                                Colors.green.shade300,
+                                AppTheme.lightGreen,
                                 AppTheme.primaryColor,
                               ],
-                              stops: const [0.0, 0.5, 1.0],
+                              stops: [0.0, 0.5, 1.0],
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                             ).createShader(bounds);
                           },
                           child: Text(
                             'AgriTrack',
-                            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                            style: theme.textTheme.displayLarge?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.5,
@@ -157,10 +160,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                       // Static tagline
                       Text(
                         'Smart Farming Solutions',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Colors.black87,
-                          letterSpacing: 0.5,
-                        ),
+                        style: theme.textTheme.titleMedium,
                       ),
                     ],
                   ),
@@ -211,7 +211,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildClouds() {
+  Widget _buildClouds(bool isDarkMode) {
+    final cloudColor = isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300;
+    final darkCloudColor = isDarkMode ? Colors.grey.shade600 : Colors.grey.shade400;
+
     return Stack(
       children: [
         Positioned(
@@ -220,7 +223,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           child: HugeIcon(
             icon: HugeIcons.strokeRoundedCloud,
             size: 60,
-            color: Colors.grey.shade300,
+            color: cloudColor,
           ),
         ),
         Positioned(
@@ -229,7 +232,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           child: HugeIcon(
             icon: HugeIcons.strokeRoundedCloud,
             size: 70,
-            color: Colors.grey.shade400,
+            color: darkCloudColor,
           ),
         ),
         Positioned(
@@ -238,7 +241,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           child: HugeIcon(
             icon: HugeIcons.strokeRoundedCloud,
             size: 65,
-            color: Colors.grey.shade300,
+            color: cloudColor,
           ),
         ),
       ],
@@ -248,13 +251,29 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
 // Soil painter
 class SoilPainter extends CustomPainter {
+  final bool isDarkMode;
+
+  SoilPainter({required this.isDarkMode});
+
   @override
   void paint(Canvas canvas, Size size) {
+    final soilBaseColor = isDarkMode
+        ? const Color(0xFF3D2314)
+        : const Color(0xFF8B4513);
+
+    final soilDarkColor = isDarkMode
+        ? const Color(0xFF2A1A0A)
+        : const Color(0xFF654321);
+
+    final spotColor = isDarkMode
+        ? const Color(0xFF2A1A0A).withOpacity(0.4)
+        : const Color(0xFF3D2314).withOpacity(0.3);
+
     final paint = Paint()
       ..shader = LinearGradient(
         colors: [
-          const Color(0xFF8B4513).withOpacity(0.8),
-          const Color(0xFF654321),
+          soilBaseColor.withOpacity(0.8),
+          soilDarkColor,
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -275,7 +294,7 @@ class SoilPainter extends CustomPainter {
 
     final Random random = Random(42);
     final spotPaint = Paint()
-      ..color = const Color(0xFF3D2314).withOpacity(0.3)
+      ..color = spotColor
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 100; i++) {
@@ -288,7 +307,7 @@ class SoilPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant SoilPainter oldDelegate) {
+    return oldDelegate.isDarkMode != isDarkMode;
   }
 }

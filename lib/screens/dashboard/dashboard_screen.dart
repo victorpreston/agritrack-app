@@ -8,6 +8,7 @@ import 'home_tab.dart';
 import 'disease_detection_tab.dart';
 import 'market_tab.dart';
 import 'profile_tab.dart';
+import 'agri_bot.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -44,7 +45,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    // Get appropriate background color based on theme
     final backgroundColor = isDarkMode
         ? theme.scaffoldBackgroundColor
         : Colors.white;
@@ -73,17 +73,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
         animationDuration: const Duration(milliseconds: 300),
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Show quick actions menu
-          _showQuickActionsMenu();
-        },
-        backgroundColor: theme.colorScheme.primary,
-        child: const Icon(
-          HugeIcons.strokeRoundedMore,
-          size: 24,
-          color: Colors.white,
-        ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Chat button
+          FloatingActionButton(
+            heroTag: 'chatButton',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SmartFarmAssistant(),
+                ),
+              );
+            },
+            backgroundColor: theme.colorScheme.primary,
+            child: const Icon(
+              HugeIcons.strokeRoundedAiChat02,
+              size: 24,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Quick actions button
+          FloatingActionButton(
+            heroTag: 'quickActionsButton',
+            onPressed: () {
+              // Show quick actions menu
+              _showQuickActionsMenu();
+            },
+            backgroundColor: theme.colorScheme.primary,
+            child: const Icon(
+              HugeIcons.strokeRoundedMore,
+              size: 24,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -97,99 +123,123 @@ class _DashboardScreenState extends State<DashboardScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      isScrollControlled: true,
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Quick Actions',
-                style: theme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 20),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                  child: Icon(
-                    HugeIcons.strokeRoundedSearchFocus,
-                    size: 24,
-                    color: theme.colorScheme.primary,
-                  ),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Quick Actions',
+                  style: theme.textTheme.titleLarge,
                 ),
-                title: Text('Scan Crop Disease', style: theme.textTheme.titleMedium),
-                subtitle: Text('Take a photo to detect diseases', style: theme.textTheme.bodyMedium),
-                onTap: () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _selectedIndex = 1;
-                  });
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                  child: Icon(
-                    HugeIcons.strokeRoundedShoppingBagAdd,
-                    size: 24,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                title: Text('Shop Products', style: theme.textTheme.titleMedium),
-                subtitle: Text('Browse agricultural products', style: theme.textTheme.bodyMedium),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TreatmentShopScreen(),
+                const SizedBox(height: 20),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                    child: Icon(
+                      HugeIcons.strokeRoundedSearchFocus,
+                      size: 24,
+                      color: theme.colorScheme.primary,
                     ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                  child: Icon(
-                    HugeIcons.strokeRoundedNoteAdd,
-                    size: 24,
-                    color: theme.colorScheme.primary,
                   ),
+                  title: Text('Scan Crop Disease', style: theme.textTheme.titleMedium),
+                  subtitle: Text('Take a photo to detect diseases', style: theme.textTheme.bodyMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _selectedIndex = 1;
+                    });
+                  },
                 ),
-                title: Text('Add Task', style: theme.textTheme.titleMedium),
-                subtitle: Text('Create a new farming task', style: theme.textTheme.bodyMedium),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddTaskScreen(),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                    child: Icon(
+                      HugeIcons.strokeRoundedShoppingBagAdd,
+                      size: 24,
+                      color: theme.colorScheme.primary,
                     ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                  child: Icon(
-                    Icons.analytics_outlined,
-                    size: 24,
-                    color: theme.colorScheme.primary,
                   ),
+                  title: Text('Shop Products', style: theme.textTheme.titleMedium),
+                  subtitle: Text('Browse agricultural products', style: theme.textTheme.bodyMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TreatmentShopScreen(),
+                      ),
+                    );
+                  },
                 ),
-                title: Text('View Analytics', style: theme.textTheme.titleMedium),
-                subtitle: Text('Check Market Analytics', style: theme.textTheme.bodyMedium),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MarketTab(),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                    child: Icon(
+                      HugeIcons.strokeRoundedAiChat02,
+                      size: 24,
+                      color: theme.colorScheme.primary,
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+                  title: Text('Chat with Assistant', style: theme.textTheme.titleMedium),
+                  subtitle: Text('Get farming advice and help', style: theme.textTheme.bodyMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SmartFarmAssistant(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                    child: Icon(
+                      HugeIcons.strokeRoundedNoteAdd,
+                      size: 24,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  title: Text('Add Task', style: theme.textTheme.titleMedium),
+                  subtitle: Text('Create a new farming task', style: theme.textTheme.bodyMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddTaskScreen(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                    child: Icon(
+                      Icons.analytics_outlined,
+                      size: 24,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  title: Text('View Analytics', style: theme.textTheme.titleMedium),
+                  subtitle: Text('Check Market Analytics', style: theme.textTheme.bodyMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MarketTab(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

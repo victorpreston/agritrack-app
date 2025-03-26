@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Colors - Using a consistent green (Tailwind green-600)
-  static const Color primaryColor = Color(0xFF19BB76); // Green 600
-  static const Color secondaryColor = Color(0xFF10B981); // Green 500
+  static const Color primaryColor = Color(0xFF19BB76);
+  static const Color secondaryColor = Color(0xFF10B981);
   static const Color accentColor = Color(0xFFFFEB3B);
-  static const Color darkGreen = Color(0xFF047857); // Green 700
-  static const Color lightGreen = Color(0xFF34D399); // Green 400
+  static const Color darkGreen = Color(0xFF047857);
+  static const Color lightGreen = Color(0xFF34D399);
   static const Color backgroundColor = Colors.white;
   static const Color darkBackgroundColor = Color(0xFF121212);
   static const Color errorColor = Color(0xFFE53935);
