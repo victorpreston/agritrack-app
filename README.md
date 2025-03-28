@@ -5,6 +5,29 @@
 
 ![diagram-export-3-20-2025-5_55_38-PM](https://github.com/user-attachments/assets/a40c0b97-0ce3-4577-b509-435f52c04d65)
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c8305396-63db-4693-9ad2-ecb41f50ff9a" width="22%" />
+  <img src="https://github.com/user-attachments/assets/eb782844-2d60-45a3-bbd9-ef1a48a10c2c" width="22%" />
+  <img src="https://github.com/user-attachments/assets/4f8b13ff-0257-47e8-af16-623f9d1b153c" width="22%" />
+  <img src="https://github.com/user-attachments/assets/bdfe1dd1-7c0a-4d09-9c8f-36df9dc3bbef" width="22%" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/389820c3-99e4-47e5-b5b7-72bf8ad97fea" width="22%" />
+  <img src="https://github.com/user-attachments/assets/ec47b52e-0cdd-4c2e-b8ed-e0eb42cbb671" width="22%" />
+  <img src="https://github.com/user-attachments/assets/ccc8f7e8-556a-475a-8e9b-95ebf4c31f15" width="22%" />
+  <img src="https://github.com/user-attachments/assets/01173927-a950-4c7c-81dc-512d1f3dd823" width="22%" />
+</p>
+
+
+
+
+
+
+
+
+
+
 
 AgriTrack is a Flutter-based mobile application designed to revolutionize farming through AI-powered solutions. The app helps farmers optimize crop production, detect diseases early, make data-driven decisions, and maximize profits through smart technology.
 
