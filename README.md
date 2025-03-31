@@ -3,6 +3,8 @@
 
 ## Overview
 
+[Website](https://agri-track.vercel.app/)
+
 ![diagram-export-3-20-2025-5_55_38-PM](https://github.com/user-attachments/assets/a40c0b97-0ce3-4577-b509-435f52c04d65)
 
 <p align="center">
@@ -32,6 +34,8 @@
 AgriTrack is a Flutter-based mobile application designed to revolutionize farming through AI-powered solutions. The app helps farmers optimize crop production, detect diseases early, make data-driven decisions, and maximize profits through smart technology.
 
 ## Key Features
+
+
 
 ###  AI Disease Detection
 - Upload photos of crops to instantly identify diseases
